@@ -1,0 +1,36 @@
+name: Test several paths updated and determine which triggers
+on:
+  push:
+    branches:
+      - preprod
+    paths:
+      - requirements/**
+      - plugins/**
+env:
+  REQUIREMENTS_FOLDER: "requirements"
+  REQUIREMENTS_PATH: "requirements/requirements.txt"
+  PLUGINS_FOLDER: "plugins"
+  PLUGINS_PATH: "plugins/plugins.zip"
+jobs:
+  update-files:
+    runs-on: ubuntu-latest
+    environment:
+      name: preprod
+    steps:
+      - uses: actions/checkout@main
+      - uses: dorny/paths-filter@v3
+        id: changed-files
+        with:
+            filters: |
+                plugins: 
+                    - 'plugins/**'
+                requirements:
+                    - 'requirements/**'                          
+      - name: Check plugins changed
+        if: steps.changed-files.outputs.plugins == 'true'
+        run: |
+          echo "This job runs only when some file is modified in path: $PLUGINS_FOLDER"
+      - name: Check plugins changed
+        if: steps.changed-files.outputs.requirements == 'true'
+        run: |
+            echo "This job runs only when some file is modified in path: $REQUIREMENTS_FOLDER"
