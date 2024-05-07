@@ -22,8 +22,7 @@ jobs:
           node-version: "22"
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::628777283766:role/Github-OIDC-Role-data-ingest-infrastructure-Dev
+        with:         
           aws-region: us-east-1
       - name: Install Deps
         run: |
